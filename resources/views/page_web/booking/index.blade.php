@@ -423,11 +423,20 @@
                                                     <a href="#" class="btn-action btn-notes">
                                                         <i class="fas fa-sticky-note"></i> Catatan
                                                     </a>
-                                                @elseif($booking->status == 'Diterima' && !$booking->payment)
-                                                    <a href="{{ route('booking.payment', $booking->id) }}"
-                                                        class="btn-action btn-payment">
-                                                        <i class="fas fa-credit-card"></i> Bayar
-                                                    </a>
+                                                @elseif ($booking->status == 'Diterima' && !$booking->payment)
+                                                    <button type="button" class="btn-action btn-payment"
+                                                        onclick="openPaymentModal()">
+                                                        <i class="fas fa-credit-card"></i> Payment
+                                                    </button>
+                                                @elseif (
+                                                    $booking->status != 'Selesai' &&
+                                                        $booking->status != 'Ditolak' &&
+                                                        $booking->status != 'Diproses' &&
+                                                        $booking->status != 'Dibatalkan')
+                                                    <button type="button" class="btn-action btn-cancel"
+                                                        onclick="confirmCancel({{ $booking->id }})">
+                                                        <i class="fas fa-times"></i> Cancel Order
+                                                    </button>
                                                 @endif
                                             </div>
                                             <div class="action-buttons">
@@ -468,4 +477,6 @@
             </div>
         </section>
     </main>
+    @include('page_web.booking.modal.payment')
+
 @endsection

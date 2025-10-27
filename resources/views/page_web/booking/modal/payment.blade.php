@@ -87,6 +87,8 @@
         document.getElementById('paymentForm').reset();
         document.getElementById('file-preview').style.display = 'none';
         document.getElementById('bukti_transfer').value = '';
+        // Show file upload area again when form is reset
+        document.querySelector('.file-upload-area').style.display = 'block';
         document.getElementById('form-content').style.display = 'block';
         document.querySelector('.modal-footer').style.display = 'flex';
     }
@@ -184,6 +186,8 @@
                 document.getElementById('preview-image').src = e.target.result;
                 document.querySelector('.file-name').textContent = file.name;
                 document.getElementById('file-preview').style.display = 'block';
+                // Hide file upload area when file is selected
+                document.querySelector('.file-upload-area').style.display = 'none';
             };
             reader.readAsDataURL(file);
         }
@@ -192,6 +196,8 @@
     function removeFile() {
         document.getElementById('bukti_transfer').value = '';
         document.getElementById('file-preview').style.display = 'none';
+        // Show file upload area again when file is removed
+        document.querySelector('.file-upload-area').style.display = 'block';
     }
 
     // Close modal when clicking outside
