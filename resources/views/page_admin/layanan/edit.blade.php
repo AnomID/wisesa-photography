@@ -70,7 +70,7 @@
                                     <div class="mt-2">
                                         <div id="preview-container">
                                             @if ($layanan->gambar)
-                                                <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}"
+                                                <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}"
                                                     alt="Gambar {{ $layanan->judul }}" class="img-thumbnail preview-image"
                                                     style="max-height: 200px;">
                                             @else

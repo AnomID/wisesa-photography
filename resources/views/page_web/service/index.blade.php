@@ -49,7 +49,7 @@
                             data-aos-delay="{{ $index * 100 }}">
                             <a class="service-preview" href="{{ route('services-detail', $layanan->slug) }}">
                                 <span class="service-preview__image">
-                                    <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}"
+                                    <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}"
                                         width="{{ $layout['width'] }}" height="{{ $layout['height'] }}"
                                         alt="{{ $layanan->judul }}">
                                 </span>
@@ -99,9 +99,8 @@
                                         <a class="carousel__item project-preview swiper-slide"
                                             href="{{ route('services-detail', $layanan->slug) }}">
                                             <span class="project-preview__image">
-                                                <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}"
-                                                    width="334" height="255" alt="{{ $layanan->judul }}"
-                                                    loading="lazy">
+                                                <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}" width="334"
+                                                    height="255" alt="{{ $layanan->judul }}" loading="lazy">
                                             </span>
                                             <span class="project-preview__bottom">
                                                 <span class="project-preview__title">{{ $layanan->judul }}</span>

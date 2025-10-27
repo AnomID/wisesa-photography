@@ -28,17 +28,17 @@
                         </a>
                     </li>
 
+                    <li class="pc-item">
+                        <a href="{{ route('admin.booking.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-calendar"></i></span>
+                            <span class="pc-mtext">Booking</span>
+                        </a>
+                    </li>
+
                     <li class="pc-item pc-caption">
                         <label>Data Admin</label>
                         <i class="ti ti-dashboard"></i>
                     </li>
-                    <li class="pc-item">
-                        <a href="{{ route('artikel.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-news"></i></span>
-                            <span class="pc-mtext">Data Artikel</span>
-                        </a>
-                    </li>
-
                     <li class="pc-item">
                         <a href="{{ route('profil.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-user"></i></span>
@@ -75,13 +75,6 @@
                     </li>
 
                     <li class="pc-item">
-                        <a href="{{ route('produk.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-package"></i></span>
-                            <span class="pc-mtext">Produk</span>
-                        </a>
-                    </li>
-
-                    <li class="pc-item">
                         <a href="{{ route('tentang.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-info-circle"></i></span>
                             <span class="pc-mtext">Tentang</span>
@@ -95,28 +88,6 @@
                         </a>
                     </li>
 
-                    <li class="pc-item">
-                        <a href="{{ route('tim.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-users"></i></span>
-                            <span class="pc-mtext">Tim</span>
-                        </a>
-                    </li>
-
-                    <li class="pc-item pc-hasmenu">
-                        <a href="#!" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-settings"></i></span>
-                            <span class="pc-mtext">Master</span>
-                            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
-                        </a>
-                        <ul class="pc-submenu">
-                            <li class="pc-item"><a href="{{ route('kategoriArtikel.index') }}" class="pc-link">Kategori
-                                    Artikel</a></li>
-                            <li class="pc-item"><a href="{{ route('kategoriProduk.index') }}" class="pc-link">Kategori
-                                    Produk</a></li>
-                            <li class="pc-item"><a href="{{ route('kategoriGambar.index') }}"
-                                    class="pc-link">Kategori Gambar</a></li>
-                        </ul>
-                    </li>
                 </ul>
             </div>
         @endif

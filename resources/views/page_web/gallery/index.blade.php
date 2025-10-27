@@ -67,7 +67,7 @@
                                     </div>
                                     <div class="news-card__bottom">
                                         <div class="news-card__text">
-                                            {{ Str::limit($galeri->keterangan, 120) }}
+                                            {!! Str::limit($galeri->keterangan, 120) !!}
                                         </div>
                                         <a class="arrow-link--no-scale arrow-link"
                                             href="{{ route('gallery.detail', $galeri->slug) }}">

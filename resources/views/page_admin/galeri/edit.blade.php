@@ -56,9 +56,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Keterangan</label>
-                                    <input type="text" name="keterangan"
-                                        class="form-control @error('keterangan') is-invalid @enderror"
-                                        value="{{ old('keterangan', $galeri->keterangan) }}" required>
+                                    <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror" id="keterangan">{{ old('keterangan', $galeri->keterangan) }}</textarea>
                                     @error('keterangan')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -108,4 +106,39 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('script')
+    <!-- Ckeditor js -->
+    <script src="{{ asset('admin/assets/js/plugins/ckeditor/classic/ckeditor.js') }}"></script>
+    <script>
+        let editor;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi CKEditor
+            ClassicEditor.create(document.querySelector('#keterangan'))
+                .then(editorInstance => {
+                    editor = editorInstance;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+            // Validasi form submit
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (editor) {
+                        const content = editor.getData();
+                        if (!content || content.trim() === '' || content === '<p></p>') {
+                            e.preventDefault();
+                            alert('Keterangan tidak boleh kosong!');
+                            editor.focus();
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

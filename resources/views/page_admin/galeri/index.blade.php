@@ -78,7 +78,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $galeri->judul_galeri ?? '-' }}</td>
-                                                <td>{{ $galeri->keterangan }}</td>
+                                                <td>{{ Str::limit(strip_tags($galeri->keterangan), 50) }}</td>
                                                 <td>{{ $galeri->layanan->judul ?? '-' }}</td>
                                                 <td>
                                                     <a href="{{ route('galeri.show', $galeri->id) }}"

@@ -45,7 +45,9 @@
 
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Keterangan</label>
-                                        <p class="mb-0">{{ $galeri->keterangan }}</p>
+                                        <div class="bg-light rounded p-3">
+                                            {!! $galeri->keterangan !!}
+                                        </div>
                                     </div>
 
                                     <div class="mb-3">

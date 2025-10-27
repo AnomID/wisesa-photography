@@ -84,7 +84,7 @@
                                     <div class="row">
                                         <div class="accordion__item-left col-12 col-md-6">
                                             @if ($layanan->gambar)
-                                                <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}" width="810"
+                                                <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}" width="810"
                                                     height="530" alt="{{ $layanan->judul }}"
                                                     onerror="this.src='{{ asset('web') }}/img/picture/mono/accordion-large.jpg'">
                                             @else
@@ -107,7 +107,7 @@
                                             @endif
                                             <div class="accordion__item-text">
                                                 @if ($galeriTerbaru && $galeriTerbaru->keterangan)
-                                                    {{ $galeriTerbaru->keterangan }}
+                                                    {!! Str::limit($galeriTerbaru->keterangan, 200) !!}
                                                 @else
                                                     {{ \Illuminate\Support\Str::limit($layanan->deskripsi, 200) }}
                                                 @endif

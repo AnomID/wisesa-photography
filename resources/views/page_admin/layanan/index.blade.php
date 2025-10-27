@@ -53,7 +53,7 @@
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
                                                     @if ($layanan->gambar)
-                                                        <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}"
+                                                        <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}"
                                                             alt="Gambar {{ $layanan->judul }}" class="img-thumbnail"
                                                             style="max-height: 100px;">
                                                     @else
@@ -93,14 +93,11 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                                     </form>
-                                                    <form
-                                                        action=@if ($layanan->price_list_pdf) <a href="{{ asset('upload/layanan/pdf/' . $layanan->price_list_pdf) }}"
-                                                            target="_blank"
-                                                        <button type="submit" class="btn btn-sm btn-success">Download PDF</button>
-                                                    @else
-                                                        <span class=""></span> @endif
-                                                        </td>
-                                                    </form>
+                                                    @if ($layanan->price_list_pdf)
+                                                        <a href="{{ asset('upload/layanan/pdf/' . $layanan->price_list_pdf) }}"
+                                                            target="_blank" class="btn btn-sm btn-success">Download PDF</a>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

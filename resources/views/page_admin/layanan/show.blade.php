@@ -78,7 +78,7 @@
                                         <label class="form-label fw-bold">Gambar</label>
                                         @if ($layanan->gambar)
                                             <div class="text-center">
-                                                <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}"
+                                                <img src="{{ asset('upload/layanan/' . $layanan->gambar) }}"
                                                     alt="Gambar {{ $layanan->judul }}" class="img-fluid rounded"
                                                     style="max-height: 300px;">
                                             </div>
