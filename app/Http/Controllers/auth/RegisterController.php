@@ -23,6 +23,8 @@ class RegisterController extends Controller
             'username' => 'required|string|max:50|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
             'no_wa' => 'required|string|max:20|unique:users,no_wa',
+            'instagram' => 'required|string|max:100',
+            'area' => 'required|string|max:100',
             'password' => 'required|min:6|confirmed',
             'agree-terms' => 'required',
         ], [
@@ -34,6 +36,10 @@ class RegisterController extends Controller
             'email.unique' => 'Email sudah terdaftar',
             'no_wa.required' => 'Nomor WhatsApp wajib diisi',
             'no_wa.unique' => 'Nomor WhatsApp sudah terdaftar',
+            'instagram.required' => 'Instagram wajib diisi',
+            'instagram.max' => 'Instagram maksimal 100 karakter',
+            'area.required' => 'Area wajib diisi',
+            'area.max' => 'Area maksimal 100 karakter',
             'password.required' => 'Password wajib diisi',
             'password.min' => 'Password minimal 6 karakter',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
@@ -46,6 +52,8 @@ class RegisterController extends Controller
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'no_wa' => $data['no_wa'],
+                'instagram' => $data['instagram'],
+                'area' => $data['area'],
                 'password' => Hash::make($data['password']),
                 'role' => 'user',
             ]);
@@ -53,7 +61,6 @@ class RegisterController extends Controller
             Auth::login($user);
             Alert::success('Pendaftaran berhasil!', 'Selamat datang di Linkskuy!');
             return redirect('/');
-            
         } catch (\Exception $e) {
             Alert::error('Gagal mendaftar', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
             return back()->withInput();

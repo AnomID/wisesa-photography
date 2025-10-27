@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('galeris', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('layanan_id')->constrained('layanans')->onDelete('cascade');
             $table->string('gambar');
             $table->text('keterangan');
-            $table->foreignId('kategori_gambar_id');
             $table->string('slug');
             $table->timestamps();
         });

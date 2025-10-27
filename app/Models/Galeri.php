@@ -11,9 +11,10 @@ class Galeri extends Model
     use HasFactory;
 
     protected $fillable = [
+        'layanan_id',
+        'judul_galeri',
         'gambar',
         'keterangan',
-        'kategori_gambar_id',
         'slug',
     ];
 
@@ -26,8 +27,8 @@ class Galeri extends Model
         });
     }
 
-    public function kategoriGambar()
+    public function layanan()
     {
-        return $this->belongsTo(KategoriGambar::class, 'kategori_gambar_id');
+        return $this->belongsTo(Layanan::class, 'layanan_id');
     }
 }

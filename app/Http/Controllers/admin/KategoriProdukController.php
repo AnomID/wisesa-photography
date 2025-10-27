@@ -6,6 +6,7 @@ use App\Models\KategoriProduk;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
+
 class KategoriProdukController extends Controller
 {
     /**

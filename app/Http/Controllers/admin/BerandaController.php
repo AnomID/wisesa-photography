@@ -13,20 +13,20 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class BerandaController extends Controller
 {
-    
+
     public function index()
     {
         $berandas = Beranda::all();
         return view('page_admin.beranda.index', compact('berandas'));
     }
 
-   
+
     public function create()
     {
         return view('page_admin.beranda.create');
     }
 
-    
+
     public function store(Request $request)
     {
         try {
@@ -66,7 +66,7 @@ class BerandaController extends Controller
                 // Konversi ke WebP
                 $manager = new ImageManager(new Driver());
                 $image = $manager->read($gambar_utama);
-                $image->toWebp(80); // 80 adalah kualitas kompresi
+                $image->toWebp(80);
                 $image->save($path . '/' . $gambar_utama_name);
 
                 $beranda->gambar_utama = $gambar_utama_name;
@@ -88,7 +88,7 @@ class BerandaController extends Controller
                 // Konversi ke WebP
                 $manager = new ImageManager(new Driver());
                 $image = $manager->read($gambar_sekunder);
-                $image->toWebp(80); // 80 adalah kualitas kompresi
+                $image->toWebp(80);
                 $image->save($path . '/' . $gambar_sekunder_name);
 
                 $beranda->gambar_sekunder = $gambar_sekunder_name;
@@ -103,29 +103,29 @@ class BerandaController extends Controller
             Log::info('Beranda berhasil disimpan');
             Alert::toast('Beranda berhasil ditambahkan', 'success')->position('top-end');
             return redirect()->route('beranda.index')->with('success', 'Beranda berhasil ditambahkan');
-
         } catch (\Exception $e) {
             Log::error('Error in BerandaController@store: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
+            Alert::toast('Terjadi kesalahan: ' . $e->getMessage(), 'error')->position('top-end');
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
         }
     }
 
-    
+
     public function show(Beranda $beranda)
     {
         return view('page_admin.beranda.show', compact('beranda'));
     }
 
-    
+
     public function edit(Beranda $beranda)
     {
         return view('page_admin.beranda.edit', compact('beranda'));
     }
 
-   
+
     public function update(Request $request, Beranda $beranda)
     {
         $request->validate([

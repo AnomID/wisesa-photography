@@ -1,0 +1,296 @@
+/* Booking Form Styles - Sesuai dengan profil.blade.php */
+.booking-section {
+    padding: 80px 0;
+    background-color: #f7f7f7;
+}
+
+.booking-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 19px;
+}
+
+@media (min-width: 1400px) {
+    .booking-container {
+        max-width: 1920px;
+        padding: 0 80px;
+    }
+}
+
+.booking-form-container {
+    background: #ffffff;
+    padding: 60px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .booking-form-container {
+        padding: 40px 30px;
+    }
+}
+
+.booking-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-title {
+    font-family: "Neue Montreal", "Arial", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .form-title {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+}
+
+/* Menggunakan field class dari main.css untuk konsistensi */
+.field {
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: text;
+    margin-bottom: 40px;
+}
+
+.field:last-child {
+    margin-bottom: 0;
+}
+
+.field input,
+.field textarea,
+.field select {
+    display: block;
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0 0 14px;
+    font-family: "Neue Montreal", "Arial", sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    color: #000000;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
+    transition: all 0.3s ease;
+}
+
+/* Khusus untuk select, date, dan time - label langsung ke atas */
+.field select,
+.field input[type="date"],
+.field input[type="time"] {
+    color: #000000;
+}
+
+.field select:not([value=""]) + .field__hint,
+.field select:valid + .field__hint,
+.field input[type="date"] + .field__hint,
+.field input[type="time"] + .field__hint {
+    font-size: 12px;
+    color: #000000;
+    transform: translateY(-24px);
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+    outline: none;
+    border-bottom-color: #ffc60a;
+}
+
+.field input:focus ~ .field__hint,
+.field textarea:focus ~ .field__hint,
+.field select:focus ~ .field__hint {
+    font-size: 12px;
+    color: #000000;
+    transform: translateY(-24px);
+}
+
+.field__hint {
+    position: absolute;
+    top: 3px;
+    left: 0;
+    font-size: 15px;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    transition: 0.2s ease;
+    pointer-events: none;
+}
+
+.field--filled .field__hint {
+    font-size: 12px;
+    color: #000000;
+    transform: translateY(-24px);
+}
+
+.field__hint ion-icon {
+    font-size: 1.2rem;
+    color: #ffc60a;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.form-help {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.field__error {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Form Actions */
+.form-actions {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.submit-booking-btn {
+    display: inline-flex;
+    align-items: center;
+    min-width: 207px;
+    padding: 20px 40px;
+    font-family: "Neue Montreal", "Arial", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+    background-color: #ffc60a;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.submit-booking-btn:focus {
+    outline: none;
+}
+
+@media (min-width: 992px) {
+    .submit-booking-btn:hover,
+    .submit-booking-btn:focus {
+        background-color: #000000;
+    }
+}
+
+.submit-booking-btn ion-icon {
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+.back-booking-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 20px 40px;
+    font-family: "Neue Montreal", "Arial", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    text-transform: uppercase;
+    color: #000000;
+    background-color: transparent;
+    border: 1px solid #000000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+@media (min-width: 992px) {
+    .back-booking-btn:hover,
+    .back-booking-btn:focus {
+        background-color: #000000;
+        color: #ffffff;
+    }
+}
+
+.back-booking-btn ion-icon {
+    font-size: 1.3rem;
+    margin-right: 10px;
+}
+
+/* Row untuk dua kolom */
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+/* Select custom styling */
+.field select {
+    cursor: pointer;
+}
+
+.field select option {
+    padding: 10px;
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .booking-container {
+        padding: 0 19px;
+    }
+
+    .field {
+        margin-bottom: 40px;
+    }
+
+    .form-actions {
+        margin-top: 40px;
+    }
+
+    .submit-booking-btn,
+    .back-booking-btn {
+        padding: 15px 30px;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .submit-booking-btn {
+        min-width: 100%;
+    }
+
+    .back-booking-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .field {
+        margin-bottom: 30px;
+    }
+
+    .form-actions {
+        margin-top: 30px;
+    }
+
+    .submit-booking-btn,
+    .back-booking-btn {
+        padding: 12px 25px;
+    }
+}

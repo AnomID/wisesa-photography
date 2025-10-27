@@ -14,8 +14,8 @@
                     </a>
                 </li>
                 <li class="dropdown pc-h-item d-inline-flex d-md-none">
-                    <a class="pc-head-link dropdown-toggle arrow-none m-0" data-bs-toggle="dropdown"
-                        href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <a class="pc-head-link dropdown-toggle arrow-none m-0" data-bs-toggle="dropdown" href="#"
+                        role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="ti ti-search"></i>
                     </a>
                     <div class="dropdown-menu pc-h-dropdown drp-search">
@@ -40,7 +40,7 @@
         <div class="ms-auto">
             <ul class="list-unstyled">
                 <li class="dropdown pc-h-item">
-                   
+
                     <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header d-flex align-items-center justify-content-between">
                             <h5 class="m-0">Message</h5>
@@ -114,38 +114,58 @@
                     </div>
                 </li>
                 <li class="dropdown pc-h-item header-user-profile">
-                    <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown"
-                        href="#" role="button" aria-haspopup="false" data-bs-auto-close="outside"
-                        aria-expanded="false">
-                        @php
-                            $fotoProfile = Auth::user()->foto_profile ?? null;
-                            if ($fotoProfile) {
-                                // Jika sudah berupa URL lengkap
-                                if (Str::startsWith($fotoProfile, ['http://', 'https://'])) {
-                                    $srcFoto = $fotoProfile;
+                    <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                        role="button" aria-haspopup="false" data-bs-auto-close="outside" aria-expanded="false">
+                        @if (Auth::check())
+                            @php
+                                $fotoProfile = Auth::user()->foto_profile ?? null;
+                                if ($fotoProfile) {
+                                    // Jika sudah berupa URL lengkap
+                                    if (Str::startsWith($fotoProfile, ['http://', 'https://'])) {
+                                        $srcFoto = $fotoProfile;
+                                    } else {
+                                        // Jika path lokal, gunakan asset()
+                                        $srcFoto = asset('upload/foto_profile/' . $fotoProfile);
+                                    }
                                 } else {
-                                    // Jika path lokal, gunakan asset()
-                                    $srcFoto = asset('upload/foto_profile/' . $fotoProfile);
+                                    $srcFoto = asset('env/logo.png');
                                 }
-                            } else {
-                                $srcFoto = asset('env/logo.png');
-                            }
-                        @endphp
-                        <img src="{{ $srcFoto }}" alt="user-image" class="user-avtar">
-                        <span>{{ Auth::user()->name }}</span>
+                            @endphp
+                            <img src="{{ $srcFoto }}" alt="user-image" class="user-avtar">
+                            <span>{{ Auth::user()->name }}</span>
+                        @else
+                            <img src="{{ asset('env/logo.png') }}" alt="user-image" class="user-avtar">
+                            <span>Guest</span>
+                        @endif
                     </a>
                     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
                         <div class="dropdown-header">
                             <div class="d-flex mb-1">
                                 <div class="flex-shrink-0">
-                                    <img src="{{ $srcFoto }}"
-                                        alt="user-image" class="user-avtar wid-35">
+                                    @if (Auth::check())
+                                        @php
+                                            $fotoProfile = Auth::user()->foto_profile ?? null;
+                                            if ($fotoProfile) {
+                                                if (Str::startsWith($fotoProfile, ['http://', 'https://'])) {
+                                                    $srcFoto = $fotoProfile;
+                                                } else {
+                                                    $srcFoto = asset('upload/foto_profile/' . $fotoProfile);
+                                                }
+                                            } else {
+                                                $srcFoto = asset('env/logo.png');
+                                            }
+                                        @endphp
+                                        <img src="{{ $srcFoto }}" alt="user-image" class="user-avtar wid-35">
+                                    @else
+                                        <img src="{{ asset('env/logo.png') }}" alt="user-image"
+                                            class="user-avtar wid-35">
+                                    @endif
                                 </div>
                                 <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-1">{{ Auth::user()->name }}</h6>
-                                    <span>{{ Auth::user()->role }}</span>
+                                    <h6 class="mb-1">{{ Auth::check() ? Auth::user()->name : 'Guest' }}</h6>
+                                    <span>{{ Auth::check() ? Auth::user()->role : 'Guest' }}</span>
                                 </div>
-                              
+
                             </div>
                         </div>
                         <div class="d-flex justify-content-between px-3 py-2">
@@ -156,7 +176,7 @@
                                 <i class="ti ti-power"></i> Logout
                             </a>
                         </div>
-                    
+
                     </div>
                 </li>
             </ul>

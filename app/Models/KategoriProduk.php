@@ -32,5 +32,3 @@ class KategoriProduk extends Model
         return $this->hasMany(Produk::class);
     }
 }
-
-?>

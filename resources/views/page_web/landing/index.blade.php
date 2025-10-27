@@ -70,16 +70,17 @@
                 </a>
             </div>
         </section>
+        {{-- Section About Us --}}
         <section class="about-video-section about-video-section--pt-50">
             <div class="about-video-section__container container container--size-large">
                 <div class="row">
                     <div class="about-video-section__main col-12 col-md">
                         <div class="about-video-section__title about-video-section__title--size-large" data-aos="fade-up">
-                            Our team consists of practitioners who have 15 years of experience
-                            in launching and managing projects</div>
+                            {{ $tentang->judul ?? 'Our team consists of practitioners who have 15 years of experience in launching and managing projects' }}
+                        </div>
                         <div class="row align-items-end" data-aos="fade-up">
                             <div class="col-4 col-md-5 col-xl-4">
-                                <a class="about-video-section__more arrow-link" href="about-us.html">
+                                <a class="about-video-section__more arrow-link" href="{{ route('about') }}">
                                     <span class="arrow-link__text">About us</span>
                                     <span class="arrow-link__icon">
                                         <svg width="75" height="75">
@@ -89,23 +90,75 @@
                                 </a>
                             </div>
                             <div class="col-8 col-md-7 col-xl-8">
-                                <div class="about-video-section__text" data-aos="fade-up">We make our customers '
-                                    products valuable in the eyes of customers. To do this, we analyze and study
-                                    people, build long-term strategies for interacting with them, develop creative
-                                    ideas and create a bright design. We use all opportunities to solve business
-                                    problems.</div>
+                                <div class="about-video-section__text" data-aos="fade-up">
+                                    {{ $tentang->deskripsi ?? 'We make our customers products valuable in the eyes of customers. To do this, we analyze and study people, build long-term strategies for interacting with them, develop creative ideas and create a bright design. We use all opportunities to solve business problems.' }}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="about-video-section__aside col-12 col-md order-first order-md-0" data-aos="fade-up">
                         <div class="about-video-section__video video-block">
-                            <img src="{{ asset('web') }}/img/picture/common/video-poster.jpg" width="810" height="539"
-                                alt="About us video">
+                            @if ($tentang && $tentang->gambar)
+                                <img src="{{ asset('upload/tentang/' . $tentang->gambar) }}" width="810" height="539"
+                                    alt="About us video">
+                            @else
+                                <img src="{{ asset('web') }}/img/picture/common/video-poster.jpg" width="810"
+                                    height="539" alt="About us video">
+                            @endif
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="about-video-section__statistics statistics">
+                    <div class="statistics__container container">
+                        <div class="row justify-content-between">
+                            @if ($tentang && $tentang->hitungan && $tentang->keterangan_hitungan)
+                                @php
+                                    $hitungan = is_array($tentang->hitungan)
+                                        ? $tentang->hitungan
+                                        : json_decode($tentang->hitungan, true);
+                                    $keterangan = is_array($tentang->keterangan_hitungan)
+                                        ? $tentang->keterangan_hitungan
+                                        : json_decode($tentang->keterangan_hitungan, true);
+                                @endphp
+                                @foreach ($hitungan as $index => $value)
+                                    <div class="statistics__item col-6 col-md-auto" data-aos="fade-up">
+                                        <div class="statistics__item-value">
+                                            <span class="__js_number" data-end-value="{{ $value }}">0</span>
+                                        </div>
+                                        <div class="statistics__item-text">{!! nl2br(e($keterangan[$index] ?? '')) !!}</div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="statistics__item col-6 col-md-auto" data-aos="fade-up">
+                                    <div class="statistics__item-value">
+                                        <span class="__js_number" data-end-value="25">0</span>
+                                    </div>
+                                    <div class="statistics__item-text">managers</div>
+                                </div>
+                                <div class="statistics__item col-6 col-md-auto" data-aos="fade-up">
+                                    <div class="statistics__item-value">
+                                        <span class="__js_number" data-end-value="200">0</span>
+                                    </div>
+                                    <div class="statistics__item-text">the person<br>in the team</div>
+                                </div>
+                                <div class="statistics__item col-6 col-md-auto" data-aos="fade-up">
+                                    <div class="statistics__item-value">
+                                        <span class="__js_number" data-end-value="15">0</span>
+                                    </div>
+                                    <div class="statistics__item-text">Years<br>experience</div>
+                                </div>
+                                <div class="statistics__item col-6 col-md-auto" data-aos="fade-up">
+                                    <div class="statistics__item-value">
+                                        <span class="__js_number" data-end-value="7">0</span>
+                                    </div>
+                                    <div class="statistics__item-text">awards and<br>accolades</div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
         </section>
+        {{-- Corousel Project --}}
         <section class="carousel-section carousel-section--separator">
             <div class="carousel-section__container container container--size-large">
                 <header class="carousel-section__header row align-items-center">
@@ -124,8 +177,8 @@
                         </button>
                     </div>
                     <div class="col-12 col-md-3 text-md-right ml-auto" data-aos="fade-up">
-                        <a class="carousel-section__more arrow-link" href="projects-masonry.html">
-                            <span class="arrow-link__text">View all</span>
+                        <a class="carousel-section__more arrow-link" href="{{ route('gallery') }}">
+                            <span class="arrow-link__text">Lihat semua</span>
                             <span class="arrow-link__icon">
                                 <svg width="75" height="75">
                                     <use xlink:href="#link-arrow"></use>
@@ -137,62 +190,48 @@
                 <div class="carousel-section__carousel carousel carousel--slide-auto swiper-container __js_carousel-latest-projects"
                     data-aos="fade-up">
                     <div class="swiper-wrapper">
-                        <a class="carousel__item project-preview swiper-slide" href="single-project.html">
-                            <span class="project-preview__image">
-                                <img src="{{ asset('web') }}/img/picture/carousel/4.jpg" width="720" height="548"
-                                    alt="water bottle">
-                            </span>
-                            <span class="project-preview__bottom">
-                                <span class="project-preview__title">Water bottle</span>
-                                <span class="project-preview__icon">
-                                    <svg width="24" height="23">
-                                        <use xlink:href="#link-arrow2"></use>
-                                    </svg>
+                        @forelse($galeris as $index => $galeri)
+                            @php
+                                $sizes = [
+                                    ['width' => 720, 'height' => 548],
+                                    ['width' => 404, 'height' => 491],
+                                    ['width' => 334, 'height' => 255],
+                                    ['width' => 433, 'height' => 321],
+                                ];
+                                $size = $sizes[$index % count($sizes)];
+                            @endphp
+                            <a class="carousel__item project-preview swiper-slide"
+                                href="{{ route('gallery.detail', $galeri->slug) }}">
+                                <span class="project-preview__image">
+                                    <img src="{{ asset('upload/galeri/' . $galeri->gambar) }}"
+                                        width="{{ $size['width'] }}" height="{{ $size['height'] }}"
+                                        alt="{{ $galeri->judul_galeri }}">
                                 </span>
-                            </span>
-                        </a>
-                        <a class="carousel__item project-preview swiper-slide" href="single-project.html">
-                            <span class="project-preview__image">
-                                <img src="{{ asset('web') }}/img/picture/carousel/5.jpg" width="334" height="255"
-                                    alt="Copenhagen">
-                            </span>
-                            <span class="project-preview__bottom">
-                                <span class="project-preview__title">Copenhagen</span>
-                                <span class="project-preview__icon">
-                                    <svg width="24" height="23">
-                                        <use xlink:href="#link-arrow2"></use>
-                                    </svg>
+                                <span class="project-preview__bottom">
+                                    <span class="project-preview__title">{{ $galeri->judul_galeri }}</span>
+                                    <span class="project-preview__icon">
+                                        <svg width="24" height="23">
+                                            <use xlink:href="#link-arrow2"></use>
+                                        </svg>
+                                    </span>
                                 </span>
-                            </span>
-                        </a>
-                        <a class="carousel__item project-preview swiper-slide" href="single-project.html">
-                            <span class="project-preview__image">
-                                <img src="{{ asset('web') }}/img/picture/carousel/6.jpg" width="404" height="491"
-                                    alt="Kodak">
-                            </span>
-                            <span class="project-preview__bottom">
-                                <span class="project-preview__title">Kodak</span>
-                                <span class="project-preview__icon">
-                                    <svg width="24" height="23">
-                                        <use xlink:href="#link-arrow2"></use>
-                                    </svg>
+                            </a>
+                        @empty
+                            <div class="carousel__item project-preview swiper-slide">
+                                <span class="project-preview__image">
+                                    <img src="{{ asset('web') }}/img/picture/carousel/4.jpg" width="720"
+                                        height="548" alt="No projects available">
                                 </span>
-                            </span>
-                        </a>
-                        <a class="carousel__item project-preview swiper-slide" href="single-project.html">
-                            <span class="project-preview__image">
-                                <img src="{{ asset('web') }}/img/picture/carousel/7.jpg" width="433" height="321"
-                                    alt="Exoape">
-                            </span>
-                            <span class="project-preview__bottom">
-                                <span class="project-preview__title">Exoape</span>
-                                <span class="project-preview__icon">
-                                    <svg width="24" height="23">
-                                        <use xlink:href="#link-arrow2"></use>
-                                    </svg>
+                                <span class="project-preview__bottom">
+                                    <span class="project-preview__title">Belum ada proyek tersedia</span>
+                                    <span class="project-preview__icon">
+                                        <svg width="24" height="23">
+                                            <use xlink:href="#link-arrow2"></use>
+                                        </svg>
+                                    </span>
                                 </span>
-                            </span>
-                        </a>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -205,47 +244,47 @@
                 <div class="swiper testimonial-swiper">
                     <div class="swiper-wrapper">
 
-                        <!-- Testimonial 1 -->
-                        <div class="swiper-slide">
-                            <div class="testimonial-container">
-                                <div class="testimonial-icon"><i class="bx bx-heart"></i></div>
-                                <p class="testimonial-quote">"I love this! It rocks!"</p>
-                                <div class="testimonial-user">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="testimonial-avatar">
-                                    <div class="testimonial-rating">★★★★★</div>
-                                    <h4 class="testimonial-name">John Doe</h4>
-                                    <p class="testimonial-location">21 September 2025</p>
+                        @forelse($testimonis as $testimoni)
+                            <!-- Testimonial {{ $loop->iteration }} -->
+                            <div class="swiper-slide">
+                                <div class="testimonial-container">
+                                    <div class="testimonial-icon"><i class="bx bx-heart"></i></div>
+                                    <p class="testimonial-quote">"{{ $testimoni->testimoni }}"</p>
+                                    <div class="testimonial-user">
+                                        <img src="{{ asset('upload/testimoni/' . $testimoni->gambar) }}"
+                                            alt="{{ $testimoni->nama }}" class="testimonial-avatar">
+                                        <div class="testimonial-rating">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $testimoni->rating)
+                                                    ★
+                                                @else
+                                                    ☆
+                                                @endif
+                                            @endfor
+                                        </div>
+                                        <h4 class="testimonial-name">{{ $testimoni->nama }}</h4>
+                                        <p class="testimonial-location">{{ $testimoni->jabatan }}</p>
+                                        <p class="testimonial-date">{{ $testimoni->created_at->format('d F Y') }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Testimonial 2 -->
-                        <div class="swiper-slide">
-                            <div class="testimonial-container">
-                                <div class="testimonial-icon"><i class="bx bx-heart"></i></div>
-                                <p class="testimonial-quote">"Amazing service, very professional!"</p>
-                                <div class="testimonial-user">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="testimonial-avatar">
-                                    <div class="testimonial-rating">★★★★★</div>
-                                    <h4 class="testimonial-name">Jane Smith</h4>
-                                    <p class="testimonial-location">21 September 2025</p>
+                        @empty
+                            <!-- Default testimonial jika tidak ada data -->
+                            <div class="swiper-slide">
+                                <div class="testimonial-container">
+                                    <div class="testimonial-icon"><i class="bx bx-heart"></i></div>
+                                    <p class="testimonial-quote">"Belum ada testimonial yang tersedia."</p>
+                                    <div class="testimonial-user">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User"
+                                            class="testimonial-avatar">
+                                        <div class="testimonial-rating">★★★★★</div>
+                                        <h4 class="testimonial-name">Admin</h4>
+                                        <p class="testimonial-location">Administrator</p>
+                                        <p class="testimonial-date">{{ now()->format('d F Y') }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Testimonial 3 -->
-                        <div class="swiper-slide">
-                            <div class="testimonial-container">
-                                <div class="testimonial-icon"><i class="bx bx-heart"></i></div>
-                                <p class="testimonial-quote">"Best experience ever, highly recommend."</p>
-                                <div class="testimonial-user">
-                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="testimonial-avatar">
-                                    <div class="testimonial-rating">★★★★★</div>
-                                    <h4 class="testimonial-name">Michael Lee</h4>
-                                    <p class="testimonial-location">21 September 2025</p>
-                                </div>
-                            </div>
-                        </div>
+                        @endforelse
 
                     </div>
 
@@ -264,7 +303,7 @@
                             <h2 class="our-services__title">Our services</h2>
                         </div>
                         <div class="col-12 col-md-auto col-xl-2 ml-auto text-md-right" data-aos="fade-up">
-                            <a class="our-services__more arrow-link--white arrow-link" href="services.html">
+                            <a class="our-services__more arrow-link--white arrow-link" href="{{ route('services') }}">
                                 <span class="arrow-link__text">View all</span>
                                 <span class="arrow-link__icon">
                                     <svg width="75" height="75">
@@ -276,126 +315,67 @@
                     </div>
                 </header>
                 <div class="our-services__accordion accordion">
-                    <div class="accordion__item" data-aos="fade-up">
-                        <button class="accordion__item-header" type="button">
-                            <span class="row align-items-md-center">
-                                <span class="accordion__item-title col-11 col-md-6">Design</span>
-                                <span class="accordion__item-short col-11 col-md-5">Our intelligent digital
-                                    strategy and a pragmatic and thoughtful approach to solving business calls
-                                    deliver a successful framework for both you and your audience.</span>
-                            </span>
-                        </button>
-                        <div class="accordion__item-body">
-                            <div class="row">
-                                <div class="accordion__item-left col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-large.jpg" width="810"
-                                        height="530" alt="Concept">
-                                </div>
-                                <div class="accordion__item-right col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-small.jpg" width="348"
-                                        height="287" alt="Concept">
-                                    <div class="accordion__item-text">In the design process, they create both
-                                        functional and beautiful things. The team possesses unique individuality and
-                                        strong qualifications and can easily translate something so abstract and
-                                        visionary into a digital experience. They always put the clients first no
-                                        matter how complicated the tasks are.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion__item" data-aos="fade-up">
-                        <button class="accordion__item-header" type="button">
-                            <span class="row align-items-md-center">
-                                <span class="accordion__item-title col-11 col-md-6">Development</span>
-                                <span class="accordion__item-short col-11 col-md-5">We make our customers '
-                                    products valuable in the eyes of customers. To do this, we analyze and study
-                                    people, build long-term strategies for interacting with them, develop creative
-                                    ideas and create a bright design.</span>
-                            </span>
-                        </button>
-                        <div class="accordion__item-body">
-                            <div class="row">
-                                <div class="accordion__item-left col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-large.jpg" width="810"
-                                        height="530" alt="Concept">
-                                </div>
-                                <div class="accordion__item-right col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-small.jpg" width="348"
-                                        height="287" alt="Concept">
-                                    <div class="accordion__item-text">In the design process, they create both
-                                        functional and beautiful things. The team possesses unique individuality and
-                                        strong qualifications and can easily translate something so abstract and
-                                        visionary into a digital experience. They always put the clients first no
-                                        matter how complicated the tasks are.</div>
+                    @forelse ($layanans as $layanan)
+                        <div class="accordion__item" data-aos="fade-up">
+                            <button class="accordion__item-header" type="button">
+                                <span class="row align-items-md-center">
+                                    <span class="accordion__item-title col-11 col-md-6">{{ $layanan->judul }}</span>
+                                    <span
+                                        class="accordion__item-short col-11 col-md-5">{{ \Illuminate\Support\Str::limit(strip_tags($layanan->deskripsi), 150) }}</span>
+                                </span>
+                            </button>
+                            <div class="accordion__item-body">
+                                <div class="row">
+                                    <div class="accordion__item-left col-12 col-md-6">
+                                        @if ($layanan->gambar)
+                                            <img src="{{ asset('storage/layanan/' . $layanan->gambar) }}" width="810"
+                                                height="530" alt="{{ $layanan->judul }}"
+                                                onerror="this.src='{{ asset('web') }}/img/picture/mono/accordion-large.jpg'">
+                                        @else
+                                            <img src="{{ asset('web') }}/img/picture/mono/accordion-large.jpg"
+                                                width="810" height="530" alt="{{ $layanan->judul }}">
+                                        @endif
+                                    </div>
+                                    <div class="accordion__item-right col-12 col-md-6">
+                                        @php
+                                            $galeriTerbaru = $layanan->galeris->sortByDesc('created_at')->first();
+                                        @endphp
+                                        @if ($galeriTerbaru && $galeriTerbaru->gambar)
+                                            <img src="{{ asset('upload/galeri/' . $galeriTerbaru->gambar) }}"
+                                                width="348" height="287"
+                                                alt="{{ $galeriTerbaru->judul_galeri ?? 'Galeri' }}"
+                                                onerror="this.src='{{ asset('web') }}/img/picture/mono/accordion-small.jpg'">
+                                        @else
+                                            <img src="{{ asset('web') }}/img/picture/mono/accordion-small.jpg"
+                                                width="348" height="287" alt="Default">
+                                        @endif
+                                        <div class="accordion__item-text">
+                                            @if ($galeriTerbaru && $galeriTerbaru->keterangan)
+                                                {{ $galeriTerbaru->keterangan }}
+                                            @else
+                                                {{ \Illuminate\Support\Str::limit($layanan->deskripsi, 200) }}
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="accordion__item" data-aos="fade-up">
-                        <button class="accordion__item-header" type="button">
-                            <span class="row align-items-md-center">
-                                <span class="accordion__item-title col-11 col-md-6">Graphic</span>
-                                <span class="accordion__item-short col-11 col-md-5">Our intelligent digital
-                                    strategy and a pragmatic and thoughtful approach to solving business calls
-                                    deliver a successful framework for both you and your audience.</span>
-                            </span>
-                        </button>
-                        <div class="accordion__item-body">
-                            <div class="row">
-                                <div class="accordion__item-left col-12 col-md-6">
-                                    <img src="img/picture/mono/accordion-large.jpg" width="810" height="530"
-                                        alt="Concept">
-                                </div>
-                                <div class="accordion__item-right col-12 col-md-6">
-                                    <img src="img/picture/mono/accordion-small.jpg" width="348" height="287"
-                                        alt="Concept">
-                                    <div class="accordion__item-text">In the design process, they create both
-                                        functional and beautiful things. The team possesses unique individuality and
-                                        strong qualifications and can easily translate something so abstract and
-                                        visionary into a digital experience. They always put the clients first no
-                                        matter how complicated the tasks are.</div>
-                                </div>
-                            </div>
+                    @empty
+                        <div class="text-center py-5">
+                            <p>Belum ada layanan yang tersedia.</p>
                         </div>
-                    </div>
-                    <div class="accordion__item" data-aos="fade-up">
-                        <button class="accordion__item-header" type="button">
-                            <span class="row align-items-md-center">
-                                <span class="accordion__item-title col-11 col-md-6">Wordpress</span>
-                                <span class="accordion__item-short col-11 col-md-5">Our intelligent digital
-                                    strategy and a pragmatic and thoughtful approach to solving business calls
-                                    deliver a successful framework for both you and your audience.</span>
-                            </span>
-                        </button>
-                        <div class="accordion__item-body">
-                            <div class="row">
-                                <div class="accordion__item-left col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-large.jpg" width="810"
-                                        height="530" alt="Concept">
-                                </div>
-                                <div class="accordion__item-right col-12 col-md-6">
-                                    <img src="{{ asset('web') }}/img/picture/mono/accordion-small.jpg" width="348"
-                                        height="287" alt="Concept">
-                                    <div class="accordion__item-text">In the design process, they create both
-                                        functional and beautiful things. The team possesses unique individuality and
-                                        strong qualifications and can easily translate something so abstract and
-                                        visionary into a digital experience. They always put the clients first no
-                                        matter how complicated the tasks are.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </section>
         <section class="main-screen">
             <div class="main-screen__image __js_parallax">
-                <img src="{{ asset('upload/beranda/' . $beranda->gambar_utama) }}" width="1920" height="1080"
+                <img src="{{ asset('upload/beranda/' . $beranda->gambar_sekunder) }}" width="1920" height="1080"
                     alt="">
             </div>
             <div class="main-screen__container container container--size-large">
                 <h1 class="main-screen__title">
-                    <span>{{ $beranda->judul_utama }}</span>{{ $beranda->slogan }}
+                    <span>{{ $beranda->judul_sekunder }}</span>{{ $beranda->keterangan }}
                 </h1>
                 <a class="main-screen__btn btn" href="">
                     <span class="btn__text">CTA</span>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Galeri;
-use App\Models\KategoriGambar;
+use App\Models\Layanan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -19,11 +19,11 @@ class GaleriController extends Controller
      */
     public function index(Request $request)
     {
-        $galeris = Galeri::with('kategoriGambar')->paginate(10);
+        $galeris = Galeri::with('layanan')->paginate(10);
         $filter = $request->filter;
         if ($filter) {
-            $galeris = Galeri::whereHas('kategoriGambar', function ($query) use ($filter) {
-                $query->where('kategori_gambar', 'like', '%' . $filter . '%');
+            $galeris = Galeri::whereHas('layanan', function ($query) use ($filter) {
+                $query->where('judul', 'like', '%' . $filter . '%');
             })->paginate(10);
         }
         return view('page_admin.galeri.index', compact('galeris', 'filter'));
@@ -34,8 +34,8 @@ class GaleriController extends Controller
      */
     public function create()
     {
-        $kategoriGambars = KategoriGambar::all();
-        return view('page_admin.galeri.create', compact('kategoriGambars'));
+        $layanans = Layanan::all();
+        return view('page_admin.galeri.create', compact('layanans'));
     }
 
     /**
@@ -48,9 +48,10 @@ class GaleriController extends Controller
             Log::info('Request data:', $request->all());
 
             $request->validate([
+                'judul_galeri' => 'required|string|max:255',
                 'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
                 'keterangan' => 'required',
-                'kategori_gambar_id' => 'required|exists:kategori_gambar,id',
+                'layanan_id' => 'required|exists:layanans,id',
             ]);
 
             Log::info('Validasi berhasil, memproses file gambar');
@@ -74,9 +75,10 @@ class GaleriController extends Controller
                 $image->save($path . '/' . $gambarName);
 
                 $galeri = new Galeri();
+                $galeri->judul_galeri = $request->judul_galeri;
                 $galeri->gambar = $gambarName;
                 $galeri->keterangan = $request->keterangan;
-                $galeri->kategori_gambar_id = $request->kategori_gambar_id;
+                $galeri->layanan_id = $request->layanan_id;
 
                 Log::info('Mencoba menyimpan data galeri ke database');
                 if (!$galeri->save()) {
@@ -90,7 +92,6 @@ class GaleriController extends Controller
             } else {
                 throw new \Exception('File gambar tidak ditemukan');
             }
-
         } catch (\Exception $e) {
             Log::error('Error in GaleriController@store: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -113,8 +114,8 @@ class GaleriController extends Controller
      */
     public function edit(Galeri $galeri)
     {
-        $kategoriGambars = KategoriGambar::all();
-        return view('page_admin.galeri.edit', compact('galeri', 'kategoriGambars'));
+        $layanans = Layanan::all();
+        return view('page_admin.galeri.edit', compact('galeri', 'layanans'));
     }
 
     /**
@@ -124,13 +125,15 @@ class GaleriController extends Controller
     {
         try {
             $request->validate([
+                'judul_galeri' => 'required|string|max:255',
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
                 'keterangan' => 'required',
-                'kategori_gambar_id' => 'required|exists:kategori_gambar,id',
+                'layanan_id' => 'required|exists:layanans,id',
             ]);
 
+            $galeri->judul_galeri = $request->judul_galeri;
             $galeri->keterangan = $request->keterangan;
-            $galeri->kategori_gambar_id = $request->kategori_gambar_id;
+            $galeri->layanan_id = $request->layanan_id;
 
             if ($request->hasFile('gambar')) {
                 // Hapus gambar lama jika ada

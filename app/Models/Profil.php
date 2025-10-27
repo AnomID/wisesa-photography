@@ -20,8 +20,8 @@ class Profil extends Model
         'email_perusahaan',
         'instagram_perusahaan',
         'facebook_perusahaan',
-        'twitter_perusahaan',
-        'linkedin_perusahaan',
+        'tiktok_perusahaan',
+        'whatsapp_perusahaan',
         'gambar',
         'slug',
     ];

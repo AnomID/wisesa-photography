@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'username',
         'no_wa',
+        'instagram',
+        'area',
         'email',
         'password',
         'role',

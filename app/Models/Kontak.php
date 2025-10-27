@@ -14,5 +14,10 @@ class Kontak extends Model
         'email',
         'no_hp',
         'pesan',
+        'status',
+    ];
+
+    protected $attributes = [
+        'status' => 'Unread',
     ];
 }

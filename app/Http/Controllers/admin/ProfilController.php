@@ -45,8 +45,8 @@ class ProfilController extends Controller
                 'email_perusahaan' => 'required|email',
                 'instagram_perusahaan' => 'nullable|string',
                 'facebook_perusahaan' => 'nullable|string',
-                'twitter_perusahaan' => 'nullable|string',
-                'linkedin_perusahaan' => 'nullable|string',
+                'tiktok_perusahaan' => 'nullable|string',
+                'whatsapp_perusahaan' => 'nullable|string',
             ]);
 
             $profil = new Profil();
@@ -58,8 +58,8 @@ class ProfilController extends Controller
             $profil->email_perusahaan = $request->email_perusahaan;
             $profil->instagram_perusahaan = $request->instagram_perusahaan;
             $profil->facebook_perusahaan = $request->facebook_perusahaan;
-            $profil->twitter_perusahaan = $request->twitter_perusahaan;
-            $profil->linkedin_perusahaan = $request->linkedin_perusahaan;
+            $profil->tiktok_perusahaan = $request->tiktok_perusahaan;
+            $profil->whatsapp_perusahaan = $request->whatsapp_perusahaan;
 
             if ($request->hasFile('logo_perusahaan')) {
                 $logo = $request->file('logo_perusahaan');
@@ -118,8 +118,8 @@ class ProfilController extends Controller
                 'email_perusahaan' => 'required|email',
                 'instagram_perusahaan' => 'nullable|string',
                 'facebook_perusahaan' => 'nullable|string',
-                'twitter_perusahaan' => 'nullable|string',
-                'linkedin_perusahaan' => 'nullable|string',
+                'tiktok_perusahaan' => 'nullable|string',
+                'whatsapp_perusahaan' => 'nullable|string',
             ]);
 
             $profil->nama_perusahaan = $request->nama_perusahaan;
@@ -130,8 +130,8 @@ class ProfilController extends Controller
             $profil->email_perusahaan = $request->email_perusahaan;
             $profil->instagram_perusahaan = $request->instagram_perusahaan;
             $profil->facebook_perusahaan = $request->facebook_perusahaan;
-            $profil->twitter_perusahaan = $request->twitter_perusahaan;
-            $profil->linkedin_perusahaan = $request->linkedin_perusahaan;
+            $profil->tiktok_perusahaan = $request->tiktok_perusahaan;
+            $profil->whatsapp_perusahaan = $request->whatsapp_perusahaan;
 
             if ($request->hasFile('logo_perusahaan')) {
                 // Hapus logo lama jika ada

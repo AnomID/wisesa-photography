@@ -88,7 +88,6 @@ class ProdukController extends Controller
             Log::info('Produk berhasil disimpan');
             Alert::toast('Produk berhasil ditambahkan', 'success')->position('top-end');
             return redirect()->route('produk.index');
-
         } catch (\Exception $e) {
             Log::error('Error in ProdukController@store: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());

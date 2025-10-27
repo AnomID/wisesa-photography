@@ -27,7 +27,7 @@ class GoogleController extends Controller
         try {
             // Socialite sudah dikonfigurasi dengan Guzzle verify => false di AppServiceProvider
             $googleUser = Socialite::driver('google')->user();
-            
+
             $user = User::where('email', $googleUser->getEmail())->first();
 
             if ($user) {
@@ -38,8 +38,8 @@ class GoogleController extends Controller
 
                 Auth::login($user);
 
-                // Cek apakah username dan no_wa sudah ada
-                if (empty($user->username) || empty($user->no_wa)) {
+                // Cek apakah username, no_wa, instagram, dan area sudah ada
+                if (empty($user->username) || empty($user->no_wa) || empty($user->instagram) || empty($user->area)) {
                     // Jika belum ada, redirect ke halaman lengkapi data
                     return redirect()->route('google.complete', ['user_id' => $user->id]);
                 }
@@ -66,26 +66,26 @@ class GoogleController extends Controller
 
             // Redirect langsung ke halaman lengkapi data untuk user baru
             return redirect()->route('google.complete', ['user_id' => $user->id]);
-
         } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
             // Handle invalid state exception dengan redirect dan alert
             Alert::error('Sesi OAuth tidak valid', 'Silakan coba login lagi.');
             return redirect('/login');
-            
         } catch (\Exception $e) {
             // Handle SSL certificate errors dan error lainnya dengan redirect dan alert
             $errorMessage = $e->getMessage();
             $customMessage = 'Terjadi kesalahan saat login dengan Google.';
 
-            if (strpos($errorMessage, 'SSL certificate problem') !== false || 
-                strpos($errorMessage, 'cURL error 60') !== false) {
+            if (
+                strpos($errorMessage, 'SSL certificate problem') !== false ||
+                strpos($errorMessage, 'cURL error 60') !== false
+            ) {
                 $customMessage = 'Masalah SSL Certificate. Terjadi masalah dengan sertifikat SSL. Silakan coba lagi atau hubungi administrator.';
             } elseif (strpos($errorMessage, 'Client error') !== false) {
                 $customMessage = 'Error OAuth. Terjadi kesalahan pada OAuth. Pastikan konfigurasi Google OAuth sudah benar.';
             } else {
                 $customMessage = 'Terjadi kesalahan saat login dengan Google: ' . $errorMessage;
             }
-            
+
             Alert::error('Error Google OAuth', $customMessage);
             return redirect('/login');
         }
@@ -109,6 +109,8 @@ class GoogleController extends Controller
         $data = $request->validate([
             'username' => 'required|string|max:50|unique:users,username',
             'no_wa' => 'required|string|max:20|unique:users,no_wa',
+            'instagram' => 'required|string|max:100',
+            'area' => 'required|string|max:100',
             'agree-terms' => 'required',
             'user_id' => 'required|string|exists:users,id',
         ], [
@@ -116,6 +118,10 @@ class GoogleController extends Controller
             'username.unique' => 'Username sudah digunakan',
             'no_wa.required' => 'Nomor WhatsApp wajib diisi',
             'no_wa.unique' => 'Nomor WhatsApp sudah terdaftar',
+            'instagram.required' => 'Instagram wajib diisi',
+            'instagram.max' => 'Instagram maksimal 100 karakter',
+            'area.required' => 'Area wajib diisi',
+            'area.max' => 'Area maksimal 100 karakter',
             'agree-terms.required' => 'Anda harus menyetujui syarat dan ketentuan',
         ]);
 
@@ -130,13 +136,14 @@ class GoogleController extends Controller
             $user->update([
                 'username' => $data['username'],
                 'no_wa' => $data['no_wa'],
+                'instagram' => $data['instagram'],
+                'area' => $data['area'],
             ]);
 
             Auth::login($user);
 
             Alert::success('Akun berhasil dibuat lewat Google!', 'Selamat datang di Linkskuy!');
             return redirect('/');
-            
         } catch (\Exception $e) {
             Alert::error('Gagal menyelesaikan pendaftaran', 'Terjadi kesalahan. Silakan coba lagi.');
             return back()->withInput();

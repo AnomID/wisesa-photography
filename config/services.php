@@ -38,5 +38,9 @@ return [
         'scopes'        => ['openid', 'profile', 'email'],
     ],
 
+    'fontee' => [
+        'token' => env('FONTEE_TOKEN', 'N9xxni6MLNVbDCdxAapE'),
+        'admin_phone' => env('FONTEE_ADMIN_PHONE', '6287875633258'),
+    ],
 
 ];

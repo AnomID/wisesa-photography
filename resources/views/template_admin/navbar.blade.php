@@ -5,19 +5,20 @@
                 @php
                     $profil = \App\Models\Profil::first();
                 @endphp
-                @if($profil && $profil->logo_perusahaan)
-                    <img src="{{ asset('upload/profil/' . $profil->logo_perusahaan) }}" alt="Logo" style="height: 50px;">
+                @if ($profil && $profil->logo_perusahaan)
+                    <img src="{{ asset('upload/profil/' . $profil->logo_perusahaan) }}" alt="Logo"
+                        style="height: 50px;">
                 @else
                     <img src="{{ asset('env/logo.png') }}" alt="Logo" style="height: 50px;">
                 @endif
-                @if($profil && $profil->nama_perusahaan)
+                @if ($profil && $profil->nama_perusahaan)
                     <span class="ms-2 h4 mb-0 brand-title text-dark ">{{ $profil->nama_perusahaan }}</span>
                 @else
                     <span class="ms-2 h4 mb-0 brand-title text-dark ">StarterKit-v2</span>
                 @endif
             </a>
         </div>
-        @if (Auth::user()->role == 'superadmin')
+        @if (Auth::check() && Auth::user()->role == 'superadmin')
             <div class="navbar-content">
                 <ul class="pc-navbar">
                     <li class="pc-item">
@@ -69,7 +70,7 @@
                     <li class="pc-item">
                         <a href="{{ route('layanan.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-briefcase"></i></span>
-                            <span class="pc-mtext">Layanan</span>
+                            <span class="pc-mtext">Layanan (Service)</span>
                         </a>
                     </li>
 
@@ -108,9 +109,12 @@
                             <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
                         </a>
                         <ul class="pc-submenu">
-                            <li class="pc-item"><a href="{{ route('kategoriArtikel.index') }}" class="pc-link">Kategori Artikel</a></li>
-                            <li class="pc-item"><a href="{{ route('kategoriProduk.index') }}" class="pc-link">Kategori Produk</a></li>
-                            <li class="pc-item"><a href="{{ route('kategoriGambar.index') }}" class="pc-link">Kategori Gambar</a></li>
+                            <li class="pc-item"><a href="{{ route('kategoriArtikel.index') }}" class="pc-link">Kategori
+                                    Artikel</a></li>
+                            <li class="pc-item"><a href="{{ route('kategoriProduk.index') }}" class="pc-link">Kategori
+                                    Produk</a></li>
+                            <li class="pc-item"><a href="{{ route('kategoriGambar.index') }}"
+                                    class="pc-link">Kategori Gambar</a></li>
                         </ul>
                     </li>
                 </ul>

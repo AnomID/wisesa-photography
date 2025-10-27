@@ -12,10 +12,13 @@
     <link rel="mask-icon" href="{{ asset('web') }}/favicons/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- CSS-->
     <link rel="stylesheet" href="{{ asset('web') }}/css/bootstrap-grid.min.css">
     <link rel="stylesheet" href="{{ asset('web') }}/css/main.css">
+    <link rel="stylesheet" href="{{ asset('css/carousel-custom.css') }}">
     @yield('style')
     <title>Wisesa - Photography</title>
 </head>
@@ -130,10 +133,11 @@
         </svg>
     </div>
     <div class="animsition">
-       @include('template_web.header')
-       @yield('content')
-       @include('template_web.footer')
+        @include('template_web.header')
+        @yield('content')
+        @include('template_web.footer')
     </div>
+    @include('sweetalert::alert')
     @yield('script')
     <!-- Javascript libs-->
     <script src="{{ asset('web') }}/js/libs/jquery-3.5.1.min.js"></script>

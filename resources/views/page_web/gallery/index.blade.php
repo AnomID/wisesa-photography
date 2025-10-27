@@ -9,226 +9,86 @@
                 <!-- Filter news-->
                 <div class="filter blog-grid__filter">
                     <button class="filter__item filter__item--active __js_filter-btn" type="button"
-                        data-filter="*">all</button>
-                    <button class="filter__item __js_filter-btn" type="button" data-filter=".__js_design">design</button>
-                    <button class="filter__item __js_filter-btn" type="button"
-                        data-filter=".__js_marketing">marketing</button>
-                    <button class="filter__item __js_filter-btn" type="button"
-                        data-filter=".__js_business">business</button>
-                    <button class="filter__item __js_filter-btn" type="button"
-                        data-filter=".__js_photography">photography</button>
+                        data-filter="*">Semua</button>
+                    @foreach ($layanans as $layanan)
+                        <button class="filter__item __js_filter-btn" type="button"
+                            data-filter=".__js_layanan_{{ $layanan->id }}">
+                            {{ $layanan->judul }}
+                        </button>
+                    @endforeach
                 </div>
                 <ul class="blog-grid__row row g-0 __js_blog-grid">
-                    <li
-                        class="blog-grid__card news-card  col-12 col-md-6 col-lg-4 __js_masonry-item __js_design __js_business">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-1.jpg" width="533" height="510" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
-                                    </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
-                                    </div>
+                    @php
+                        $cardLayouts = [
+                            'col-12 col-md-6 col-lg-4',
+                            'col-12 col-md-6 col-lg-4',
+                            'col-12 col-md-6 col-lg-4 news-card--vertical',
+                            'col-12 col-md-6 col-lg-4 news-card--vertical',
+                            'col-12 col-md-6 col-lg-4',
+                            'col-12 col-md-6 col-lg-8',
+                        ];
+                        $layoutIndex = 0;
+                    @endphp
+
+                    @forelse($galeris as $galeri)
+                        @php
+                            $currentLayout = $cardLayouts[$layoutIndex % count($cardLayouts)];
+                            $layoutIndex++;
+                            $isVertical = strpos($currentLayout, 'vertical') !== false;
+                        @endphp
+                        <li
+                            class="blog-grid__card news-card {{ $currentLayout }} __js_masonry-item __js_layanan_{{ $galeri->layanan_id }}">
+                            <div class="news-card__wrapper">
+                                <div class="news-card__pic">
+                                    @if ($galeri->gambar)
+                                        <img src="{{ asset('upload/galeri/' . $galeri->gambar) }}"
+                                            @if (!$isVertical) width="533" height="510" @endif
+                                            alt="{{ $galeri->judul_galeri ?? $galeri->keterangan }}" />
+                                    @else
+                                        <img src="{{ asset('web') }}/img/picture/news/blog-1.jpg"
+                                            @if (!$isVertical) width="533" height="510" @endif
+                                            alt="No Image" />
+                                    @endif
                                 </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="{{ route('gallery-detail') }}">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="blog-grid__card news-card  col-12 col-md-6 col-lg-4 __js_masonry-item __js_design">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-2.jpg" width="533" height="510" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
+                                <div class="news-card__content">
+                                    <div class="news-card__top">
+                                        <div class="news-card__date">
+                                            <span>{{ $galeri->created_at->format('d') }}</span>
+                                            <span>&nbsp;</span>
+                                            <span>{{ $galeri->created_at->format('M') }}</span>
+                                            <span>,&nbsp;</span>
+                                            <span>{{ $galeri->created_at->format('Y') }}</span>
+                                            <span>&nbsp;/&nbsp;</span>
+                                            <span>{{ $galeri->layanan->judul ?? 'Tidak ada layanan' }}</span>
+                                        </div>
+                                        <div class="news-card__title">
+                                            {{ $galeri->judul_galeri ?? 'Galeri' }}
+                                        </div>
                                     </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
-                                    </div>
-                                </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="{{ route('gallery-detail') }}">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li
-                        class="blog-grid__card news-card news-card--vertical col-12 col-md-6 col-lg-4 __js_masonry-item __js_marketing __js_design">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-3.jpg" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
-                                    </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
+                                    <div class="news-card__bottom">
+                                        <div class="news-card__text">
+                                            {{ Str::limit($galeri->keterangan, 120) }}
+                                        </div>
+                                        <a class="arrow-link--no-scale arrow-link"
+                                            href="{{ route('gallery.detail', $galeri->slug) }}">
+                                            <span class="arrow-link__icon">
+                                                <svg width="75" height="75">
+                                                    <use xlink:href="#link-arrow"></use>
+                                                </svg>
+                                            </span>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="{{ route('gallery-detail') }}">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
                             </div>
-                        </div>
-                    </li>
-                    <li
-                        class="blog-grid__card news-card news-card--vertical col-12 col-md-6 col-lg-4 __js_masonry-item __js_photography __js_marketing">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-7.jpg" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
-                                    </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
-                                    </div>
-                                </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="single-post.html">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="blog-grid__card news-card  col-12 col-md-6 col-lg-4 __js_masonry-item __js_marketing">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-5.jpg" width="533" height="510" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
-                                    </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
-                                    </div>
-                                </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="{{ route('gallery-detail') }}">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="blog-grid__card news-card  col-12 col-md-6 col-lg-8 __js_masonry-item __js_photography">
-                        <div class="news-card__wrapper">
-                            <div class="news-card__pic">
-                                <img src="{{ asset('web') }}/img/picture/news/blog-9.jpg" alt="" />
-                            </div>
-                            <div class="news-card__content">
-                                <div class="news-card__top">
-                                    <div class="news-card__date">
-                                        <span>16</span>
-                                        <span>&nbsp;</span>
-                                        <span>Jan</span>
-                                        <span>,&nbsp;</span>
-                                        <span>2020</span>
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <span>Design</span>
-                                    </div>
-                                    <div class="news-card__title">A few words
-                                        <br> about us
-                                    </div>
-                                </div>
-                                <div class="news-card__bottom">
-                                    <div class="news-card__text">We make our customers &#39; products valuable in the eyes
-                                        of customers. To do this, we analyze and study people</div>
-                                    <a class="arrow-link--no-scale arrow-link" href="{{ route('gallery-detail') }}">
-                                        <span class="arrow-link__icon">
-                                            <svg width="75" height="75">
-                                                <use xlink:href="#link-arrow"></use>
-                                            </svg>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    @empty
+                        <li class="col-12 text-center py-5">
+                            <p class="text-muted">Belum ada galeri yang tersedia</p>
+                        </li>
+                    @endforelse
                 </ul>
                 <a class="blog-grid__more circle-link" href="#">
-                    <svg width="30" height="32">
+                    <svg width="30" height="32" style="transform: rotate(180deg);">
                         <use xlink:href="#arrow-down"></use>
                     </svg>
                 </a>

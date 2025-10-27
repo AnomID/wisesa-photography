@@ -17,10 +17,12 @@ class LayananController extends Controller
      */
     public function index(Request $request)
     {
-        $layanans = Layanan::paginate(10);
+        $layanans = Layanan::withCount(['galeris', 'subLayanans'])->paginate(10);
         $filter = $request->filter;
         if ($filter) {
-            $layanans = Layanan::where('judul', 'like', '%' . $filter . '%')->paginate(10);
+            $layanans = Layanan::where('judul', 'like', '%' . $filter . '%')
+                ->withCount(['galeris', 'subLayanans'])
+                ->paginate(10);
         }
         return view('page_admin.layanan.index', compact('layanans', 'filter'));
     }
@@ -45,6 +47,7 @@ class LayananController extends Controller
             $request->validate([
                 'judul' => 'required',
                 'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
+                'price_list_pdf' => 'nullable|mimes:pdf|max:10000',
                 'deskripsi' => 'required',
             ]);
 
@@ -59,9 +62,9 @@ class LayananController extends Controller
                 $gambarName = time() . '.webp';
 
                 // Pastikan direktori ada
-                $path = public_path('storage/layanan');
+                $path = public_path('upload/layanan');
                 if (!file_exists($path)) {
-                    Log::info('Membuat direktori storage/layanan');
+                    Log::info('Membuat direktori upload/layanan');
                     mkdir($path, 0777, true);
                 }
 
@@ -69,10 +72,26 @@ class LayananController extends Controller
                 // Konversi ke WebP
                 $manager = new ImageManager(new Driver());
                 $image = $manager->read($gambar);
-                $image->toWebp(80); // 80 adalah kualitas kompresi
+                $image->toWebp(80);
                 $image->save($path . '/' . $gambarName);
 
                 $layanan->gambar = $gambarName;
+            }
+
+            // Upload PDF Price List
+            if ($request->hasFile('price_list_pdf')) {
+                $pdf = $request->file('price_list_pdf');
+                $pdfName = time() . '_price_list.pdf';
+
+                // Pastikan direktori ada
+                $pdfPath = public_path('upload/layanan/pdf');
+                if (!file_exists($pdfPath)) {
+                    Log::info('Membuat direktori upload/layanan/pdf');
+                    mkdir($pdfPath, 0777, true);
+                }
+
+                $pdf->move($pdfPath, $pdfName);
+                $layanan->price_list_pdf = $pdfName;
             }
 
             Log::info('Mencoba menyimpan data layanan ke database');
@@ -84,7 +103,6 @@ class LayananController extends Controller
             Log::info('Layanan berhasil disimpan');
             Alert::toast('Layanan berhasil ditambahkan', 'success')->position('top-end');
             return redirect()->route('layanan.index');
-
         } catch (\Exception $e) {
             Log::error('Error in LayananController@store: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -98,6 +116,7 @@ class LayananController extends Controller
      */
     public function show(Layanan $layanan)
     {
+        $layanan->load(['galeris', 'subLayanans']);
         return view('page_admin.layanan.show', compact('layanan'));
     }
 
@@ -118,6 +137,7 @@ class LayananController extends Controller
             $request->validate([
                 'judul' => 'required',
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
+                'price_list_pdf' => 'nullable|mimes:pdf|max:10000',
                 'deskripsi' => 'required',
             ]);
 
@@ -126,15 +146,15 @@ class LayananController extends Controller
 
             if ($request->hasFile('gambar')) {
                 // Hapus gambar lama jika ada
-                if ($layanan->gambar && file_exists(public_path('storage/layanan/' . $layanan->gambar))) {
-                    unlink(public_path('storage/layanan/' . $layanan->gambar));
+                if ($layanan->gambar && file_exists(public_path('upload/layanan/' . $layanan->gambar))) {
+                    unlink(public_path('upload/layanan/' . $layanan->gambar));
                 }
 
                 $gambar = $request->file('gambar');
                 $gambarName = time() . '.webp';
 
                 // Pastikan direktori ada
-                $path = public_path('storage/layanan');
+                $path = public_path('upload/layanan');
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
@@ -146,6 +166,26 @@ class LayananController extends Controller
                 $image->save($path . '/' . $gambarName);
 
                 $layanan->gambar = $gambarName;
+            }
+
+            // Upload PDF Price List
+            if ($request->hasFile('price_list_pdf')) {
+                // Hapus PDF lama jika ada
+                if ($layanan->price_list_pdf && file_exists(public_path('upload/layanan/pdf/' . $layanan->price_list_pdf))) {
+                    unlink(public_path('upload/layanan/pdf/' . $layanan->price_list_pdf));
+                }
+
+                $pdf = $request->file('price_list_pdf');
+                $pdfName = time() . '_price_list.pdf';
+
+                // Pastikan direktori ada
+                $pdfPath = public_path('upload/layanan/pdf');
+                if (!file_exists($pdfPath)) {
+                    mkdir($pdfPath, 0777, true);
+                }
+
+                $pdf->move($pdfPath, $pdfName);
+                $layanan->price_list_pdf = $pdfName;
             }
 
             $layanan->save();
@@ -165,8 +205,13 @@ class LayananController extends Controller
     {
         try {
             // Hapus gambar jika ada
-            if ($layanan->gambar && file_exists(public_path('storage/layanan/' . $layanan->gambar))) {
-                unlink(public_path('storage/layanan/' . $layanan->gambar));
+            if ($layanan->gambar && file_exists(public_path('upload/layanan/' . $layanan->gambar))) {
+                unlink(public_path('upload/layanan/' . $layanan->gambar));
+            }
+
+            // Hapus PDF jika ada
+            if ($layanan->price_list_pdf && file_exists(public_path('upload/layanan/pdf/' . $layanan->price_list_pdf))) {
+                unlink(public_path('upload/layanan/pdf/' . $layanan->price_list_pdf));
             }
 
             $layanan->delete();

@@ -13,12 +13,13 @@
     <meta name="keywords"
         content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
     <meta name="author" content="CodedThemes">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- [Favicon] icon -->
     @php
         $profil = \App\Models\Profil::first();
     @endphp
-    @if($profil && $profil->logo_perusahaan)
+    @if ($profil && $profil->logo_perusahaan)
         <link rel="icon" href="{{ asset('upload/profil/' . $profil->logo_perusahaan) }}" type="image/x-icon">
     @else
         <link rel="icon" href="{{ asset('env') }}/logo.png" type="image/x-icon">
@@ -33,6 +34,8 @@
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/fonts/feather.css">
     <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/fonts/fontawesome.css">
+    <!-- [Font Awesome CDN - untuk icon terbaru seperti TikTok] -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- [Material Icons] https://fonts.google.com/icons -->
     <link rel="stylesheet" href="{{ asset('admin') }}/assets/fonts/material.css">
     <!-- [Template CSS Files] -->
@@ -54,17 +57,17 @@
     <!-- [ Pre-loader ] End -->
     <!-- [ Sidebar Menu ] start -->
     @include('template_admin.navbar')
-	
-	
+
+
     <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
     @include('template_admin.header')
-   
+
     <!-- [ Header ] end -->
 
 
 
     <!-- [ Main Content ] start -->
-	@yield('content')
+    @yield('content')
 
     <!-- [ Main Content ] end -->
     <footer class="pc-footer">
@@ -76,7 +79,8 @@
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">
                         <li class="list-inline-item"><a href="
-                          /dashboard-superadmin">Home</a></li>
+                          /dashboard-superadmin">Home</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -129,72 +133,73 @@
         font_change("Public-Sans");
     </script>
 
- <!-- [Page Specific JS] start -->
+    <!-- [Page Specific JS] start -->
     <!-- datatable Js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('admin') }}/assets/js/plugins/jquery.dataTables.min.js"></script>
     <script src="{{ asset('admin') }}/assets/js/plugins/dataTables.bootstrap5.min.js"></script>
     <script>
-      // [ Zero Configuration ] start
-      $('#simpletable').DataTable();
+        // [ Zero Configuration ] start
+        $('#simpletable').DataTable();
 
-      // [ Default Ordering ] start
-      $('#order-table').DataTable({
-        order: [[3, 'desc']]
-      });
+        // [ Default Ordering ] start
+        $('#order-table').DataTable({
+            order: [
+                [3, 'desc']
+            ]
+        });
 
-      // [ Multi-Column Ordering ]
-      $('#multi-colum-dt').DataTable({
-        columnDefs: [
-          {
-            targets: [0],
-            orderData: [0, 1]
-          },
-          {
-            targets: [1],
-            orderData: [1, 0]
-          },
-          {
-            targets: [4],
-            orderData: [4, 0]
-          }
-        ]
-      });
+        // [ Multi-Column Ordering ]
+        $('#multi-colum-dt').DataTable({
+            columnDefs: [{
+                    targets: [0],
+                    orderData: [0, 1]
+                },
+                {
+                    targets: [1],
+                    orderData: [1, 0]
+                },
+                {
+                    targets: [4],
+                    orderData: [4, 0]
+                }
+            ]
+        });
 
-      // [ Complex Headers ]
-      $('#complex-dt').DataTable();
+        // [ Complex Headers ]
+        $('#complex-dt').DataTable();
 
-      // [ DOM Positioning ]
-      $('#DOM-dt').DataTable({
-        dom: '<"top"i>rt<"bottom"flp><"clear">'
-      });
+        // [ DOM Positioning ]
+        $('#DOM-dt').DataTable({
+            dom: '<"top"i>rt<"bottom"flp><"clear">'
+        });
 
-      // [ Alternative Pagination ]
-      $('#alt-pg-dt').DataTable({
-        pagingType: 'full_numbers'
-      });
+        // [ Alternative Pagination ]
+        $('#alt-pg-dt').DataTable({
+            pagingType: 'full_numbers'
+        });
 
-      // [ Scroll - Vertical ]
-      $('#scr-vrt-dt').DataTable({
-        scrollY: '200px',
-        scrollCollapse: true,
-        paging: false
-      });
+        // [ Scroll - Vertical ]
+        $('#scr-vrt-dt').DataTable({
+            scrollY: '200px',
+            scrollCollapse: true,
+            paging: false
+        });
 
-      // [ Scroll - Vertical, Dynamic Height ]
-      $('#scr-vtr-dynamic').DataTable({
-        scrollY: '50vh',
-        scrollCollapse: true,
-        paging: false
-      });
+        // [ Scroll - Vertical, Dynamic Height ]
+        $('#scr-vtr-dynamic').DataTable({
+            scrollY: '50vh',
+            scrollCollapse: true,
+            paging: false
+        });
 
-      // [ Language - Comma Decimal Place ]
-      $('#lang-dt').DataTable({
-        language: {
-          decimal: ',',
-          thousands: '.'
-        }
-      });
+        // [ Language - Comma Decimal Place ]
+        $('#lang-dt').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.'
+            }
+        });
     </script>
     <!-- [Page Specific JS] end -->
 
