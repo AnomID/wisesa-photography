@@ -1,0 +1,58 @@
+/* Ratio Styles for Gallery Carousel */
+.project-preview__image {
+    max-width: 100%;
+    height: auto;
+}
+
+.project-preview__image.ratio-3-2 {
+    aspect-ratio: 3 / 2;
+    max-height: 350px;
+}
+
+.project-preview__image.ratio-4-3 {
+    aspect-ratio: 4 / 3;
+    max-height: 350px;
+}
+
+.project-preview__image.ratio-1-1 {
+    aspect-ratio: 1 / 1;
+    max-height: 350px;
+}
+
+.project-preview__image.ratio-portrait {
+    aspect-ratio: 2 / 3;
+    max-height: 450px;
+}
+
+.project-preview__image img {
+    width: 100%;
+    height: 100%;
+    max-width: 450px;
+    object-fit: cover;
+}
+
+/* Untuk carousel, batasi lebar maksimum */
+.carousel .project-preview__image {
+    max-width: 450px;
+}
+
+/* Swiper slides untuk galeri */
+.__js_carousel-gallery .swiper-slide {
+    width: auto !important;
+    max-width: 450px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .project-preview__image img {
+        max-width: 100%;
+    }
+
+    .carousel .project-preview__image {
+        max-width: 100%;
+    }
+
+    .__js_carousel-gallery .swiper-slide {
+        max-width: 100%;
+    }
+}

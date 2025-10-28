@@ -58,6 +58,7 @@
                                             <th>Gambar</th>
                                             <th>Judul Galeri</th>
                                             <th>Keterangan</th>
+                                            <th>Jumlah Item Gallery</th>
                                             <th>Layanan</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -79,6 +80,14 @@
                                                 </td>
                                                 <td>{{ $galeri->judul_galeri ?? '-' }}</td>
                                                 <td>{{ Str::limit(strip_tags($galeri->keterangan), 50) }}</td>
+                                                <td>
+                                                    @if ($galeri->list_gallery && count($galeri->list_gallery) > 0)
+                                                        <span class="badge bg-success">{{ count($galeri->list_gallery) }}
+                                                            Item</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">Tidak Ada</span>
+                                                    @endif
+                                                </td>
                                                 <td>{{ $galeri->layanan->judul ?? '-' }}</td>
                                                 <td>
                                                     <a href="{{ route('galeri.show', $galeri->id) }}"
@@ -101,6 +110,7 @@
                                             <th>Gambar</th>
                                             <th>Judul Galeri</th>
                                             <th>Keterangan</th>
+                                            <th>Jumlah Item Gallery</th>
                                             <th>Layanan</th>
                                             <th>Aksi</th>
                                         </tr>

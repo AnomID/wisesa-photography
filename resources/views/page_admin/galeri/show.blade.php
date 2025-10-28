@@ -89,6 +89,45 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- List Gallery -->
+                            @if ($galeri->list_gallery && count($galeri->list_gallery) > 0)
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Gallery Tambahan ({{ count($galeri->list_gallery) }}
+                                                    Item)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    @foreach ($galeri->list_gallery as $item)
+                                                        <div class="col-md-4 mb-3">
+                                                            <div class="card">
+                                                                <img src="{{ asset('upload/galeri/' . $item['gambar']) }}"
+                                                                    class="card-img-top"
+                                                                    alt="{{ $item['judul_galeri'] ?? 'Gallery Image' }}"
+                                                                    style="height: 200px; object-fit: cover;">
+                                                                <div class="card-body">
+                                                                    <h6 class="card-title">
+                                                                        {{ $item['judul_galeri'] ?? '-' }}</h6>
+                                                                    <p class="card-text small">
+                                                                        {{ Str::limit($item['keterangan'] ?? '', 100) }}
+                                                                    </p>
+                                                                    @if (isset($item['slug']))
+                                                                        <small class="text-muted">Slug:
+                                                                            {{ $item['slug'] }}</small>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

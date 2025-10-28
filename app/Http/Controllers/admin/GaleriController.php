@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -52,6 +53,7 @@ class GaleriController extends Controller
                 'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
                 'keterangan' => 'required',
                 'layanan_id' => 'required|exists:layanans,id',
+                'list_gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
             ]);
 
             Log::info('Validasi berhasil, memproses file gambar');
@@ -74,11 +76,32 @@ class GaleriController extends Controller
                 $image->toWebp(80); // 80 adalah kualitas kompresi
                 $image->save($path . '/' . $gambarName);
 
+                // Proses upload multiple gambar untuk list_gallery
+                $listGallery = [];
+                if ($request->hasFile('list_gambar')) {
+                    foreach ($request->file('list_gambar') as $index => $file) {
+                        $listGambarName = time() . '_' . ($index + 1) . '.webp';
+                        $listImage = $manager->read($file);
+                        $listImage->toWebp(80);
+                        $listImage->save($path . '/' . $listGambarName);
+
+                        $listGallery[] = [
+                            'judul_galeri' => $request->input('list_judul.' . $index, ''),
+                            'gambar' => $listGambarName,
+                            'keterangan' => $request->input('list_keterangan.' . $index, ''),
+                            'slug' => Str::slug($request->input('list_judul.' . $index, '')),
+                            'created_at' => now()->toDateTimeString(),
+                            'updated_at' => now()->toDateTimeString(),
+                        ];
+                    }
+                }
+
                 $galeri = new Galeri();
                 $galeri->judul_galeri = $request->judul_galeri;
                 $galeri->gambar = $gambarName;
                 $galeri->keterangan = $request->keterangan;
                 $galeri->layanan_id = $request->layanan_id;
+                $galeri->list_gallery = count($listGallery) > 0 ? $listGallery : null;
 
                 Log::info('Mencoba menyimpan data galeri ke database');
                 if (!$galeri->save()) {
@@ -129,11 +152,19 @@ class GaleriController extends Controller
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
                 'keterangan' => 'required',
                 'layanan_id' => 'required|exists:layanans,id',
+                'list_gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:7000',
             ]);
 
             $galeri->judul_galeri = $request->judul_galeri;
             $galeri->keterangan = $request->keterangan;
             $galeri->layanan_id = $request->layanan_id;
+
+            $path = public_path('upload/galeri');
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $manager = new ImageManager(new Driver());
 
             if ($request->hasFile('gambar')) {
                 // Hapus gambar lama jika ada
@@ -144,20 +175,74 @@ class GaleriController extends Controller
                 $gambar = $request->file('gambar');
                 $gambarName = time() . '.webp';
 
-                // Pastikan direktori ada
-                $path = public_path('upload/galeri');
-                if (!file_exists($path)) {
-                    mkdir($path, 0777, true);
-                }
-
                 // Konversi ke WebP
-                $manager = new ImageManager(new Driver());
                 $image = $manager->read($gambar);
-                $image->toWebp(80); // 80 adalah kualitas kompresi
+                $image->toWebp(80);
                 $image->save($path . '/' . $gambarName);
 
                 $galeri->gambar = $gambarName;
             }
+
+            // Proses update list_gallery
+            $listGallery = $galeri->list_gallery ?? [];
+
+            // Handle hapus item dari list_gallery
+            if ($request->has('hapus_gambar')) {
+                foreach ($request->hapus_gambar as $index) {
+                    $item = $listGallery[$index] ?? null;
+                    if ($item && isset($item['gambar']) && file_exists(public_path('upload/galeri/' . $item['gambar']))) {
+                        unlink(public_path('upload/galeri/' . $item['gambar']));
+                    }
+                    unset($listGallery[$index]);
+                }
+                $listGallery = array_values($listGallery); // Re-index array
+            }
+
+            // Handle upload gambar baru untuk list_gallery
+            if ($request->hasFile('list_gambar')) {
+                foreach ($request->file('list_gambar') as $index => $file) {
+                    $listGambarName = time() . '_' . ($index + 1) . '.webp';
+                    $listImage = $manager->read($file);
+                    $listImage->toWebp(80);
+                    $listImage->save($path . '/' . $listGambarName);
+
+                    // Update atau tambah item
+                    if (isset($request->input('list_index')[$index])) {
+                        $listIndex = $request->input('list_index')[$index];
+                        if (isset($listGallery[$listIndex])) {
+                            // Hapus gambar lama jika ada
+                            if (isset($listGallery[$listIndex]['gambar']) && file_exists(public_path('upload/galeri/' . $listGallery[$listIndex]['gambar']))) {
+                                unlink(public_path('upload/galeri/' . $listGallery[$listIndex]['gambar']));
+                            }
+                            $listGallery[$listIndex]['gambar'] = $listGambarName;
+                        }
+                    } else {
+                        // Tambah item baru
+                        $listGallery[] = [
+                            'judul_galeri' => $request->input('list_judul.' . $index, ''),
+                            'gambar' => $listGambarName,
+                            'keterangan' => $request->input('list_keterangan.' . $index, ''),
+                            'slug' => Str::slug($request->input('list_judul.' . $index, '')),
+                            'created_at' => now()->toDateTimeString(),
+                            'updated_at' => now()->toDateTimeString(),
+                        ];
+                    }
+                }
+            }
+
+            // Update judul dan keterangan untuk list_gallery yang sudah ada
+            if ($request->has('list_judul_existing')) {
+                foreach ($request->input('list_judul_existing') as $index => $judul) {
+                    if (isset($listGallery[$index])) {
+                        $listGallery[$index]['judul_galeri'] = $judul;
+                        $listGallery[$index]['keterangan'] = $request->input('list_keterangan_existing.' . $index, '');
+                        $listGallery[$index]['slug'] = Str::slug($judul);
+                        $listGallery[$index]['updated_at'] = now()->toDateTimeString();
+                    }
+                }
+            }
+
+            $galeri->list_gallery = count($listGallery) > 0 ? $listGallery : null;
 
             $galeri->save();
             Alert::toast('Galeri berhasil diubah', 'success')->position('top-end');
@@ -171,14 +256,96 @@ class GaleriController extends Controller
     }
 
     /**
+     * Swap gambar dengan item gallery
+     */
+    public function swap(Request $request)
+    {
+        try {
+            $request->validate([
+                'gallery_id' => 'required|exists:galeris,id',
+                'gallery_index' => 'required|integer',
+            ]);
+
+            $galeri = Galeri::findOrFail($request->gallery_id);
+
+            if (!$galeri->list_gallery || !isset($galeri->list_gallery[$request->gallery_index])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item gallery tidak ditemukan'
+                ], 404);
+            }
+
+            // Simpan data untuk swap
+            $mainJudul = $galeri->judul_galeri;
+            $mainKeterangan = $galeri->keterangan;
+            $mainGambar = $galeri->gambar;
+
+            $galleryItem = $galeri->list_gallery[$request->gallery_index];
+            $galleryJudul = $galleryItem['judul_galeri'] ?? '';
+            $galleryKeterangan = $galleryItem['keterangan'] ?? '';
+            $galleryGambar = $galleryItem['gambar'] ?? '';
+
+            $mainPath = public_path('upload/galeri/' . $mainGambar);
+            $galleryPath = public_path('upload/galeri/' . $galleryGambar);
+
+            if (file_exists($mainPath) && file_exists($galleryPath)) {
+                $tempPath = public_path('upload/galeri/temp_' . time() . '_' . $mainGambar);
+                copy($mainPath, $tempPath);
+                copy($galleryPath, $mainPath);
+                copy($tempPath, $galleryPath);
+
+                if (file_exists($tempPath)) {
+                    unlink($tempPath);
+                }
+            }
+
+            $galeri->judul_galeri = $galleryJudul;
+            $galeri->keterangan = $galleryKeterangan;
+
+            $listGallery = $galeri->list_gallery;
+            $listGallery[$request->gallery_index]['judul_galeri'] = $mainJudul;
+            $listGallery[$request->gallery_index]['keterangan'] = $mainKeterangan;
+            $galeri->list_gallery = $listGallery;
+
+            $galeri->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Gambar, judul dan keterangan berhasil di-swap',
+                'data' => [
+                    'main_judul' => $galeri->judul_galeri,
+                    'gallery_judul' => $listGallery[$request->gallery_index]['judul_galeri']
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in GaleriController@swap: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Galeri $galeri)
     {
         try {
+            // Hapus gambar utama
             if ($galeri->gambar && file_exists(public_path('upload/galeri/' . $galeri->gambar))) {
                 unlink(public_path('upload/galeri/' . $galeri->gambar));
             }
+
+            // Hapus semua gambar dari list_gallery
+            if ($galeri->list_gallery && is_array($galeri->list_gallery)) {
+                foreach ($galeri->list_gallery as $item) {
+                    if (isset($item['gambar']) && file_exists(public_path('upload/galeri/' . $item['gambar']))) {
+                        unlink(public_path('upload/galeri/' . $item['gambar']));
+                    }
+                }
+            }
+
             $galeri->delete();
             Alert::toast('Galeri berhasil dihapus', 'success')->position('top-end');
             return redirect()->route('galeri.index')->with('success', 'Galeri berhasil dihapus');

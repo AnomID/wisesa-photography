@@ -16,6 +16,11 @@ class Galeri extends Model
         'gambar',
         'keterangan',
         'slug',
+        'list_gallery',
+    ];
+
+    protected $casts = [
+        'list_gallery' => 'array',
     ];
 
     protected static function boot()

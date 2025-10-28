@@ -86,6 +86,7 @@ Route::group(['middleware' => ['role.superadmin']], function () {
     Route::resource('beranda', BerandaController::class);
     Route::resource('artikel', ArtikelController::class);
     Route::resource('galeri', GaleriController::class);
+    Route::post('/galeri/swap', [GaleriController::class, 'swap'])->name('galeri.swap');
     Route::resource('kontak', KontakController::class);
     Route::resource('layanan', LayananController::class);
     Route::resource('sub-layanan', SubLayananController::class);
